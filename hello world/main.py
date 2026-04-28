@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 
@@ -81,10 +81,16 @@ def create_note(note: NoteCreate)-> Note:
         id=note_id_counter,
         title=note.title,
         content=note.content,
-        created_at=datetime.now(datetime.UTC).isoformat()
+        created_at=datetime.now(timezone.utc).isoformat()
     )
 
     notes_db.append(new_note)
     save_notes(notes_db)
 
     return new_note
+
+@app.get("/notes")
+def list_notes() -> list[Note]:
+    """List all notes"""
+    notes_db, _ = load_notes()
+    return notes_db
