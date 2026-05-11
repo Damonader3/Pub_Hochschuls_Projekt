@@ -18,8 +18,9 @@ if 'text' not in st.session_state:
     print("init Text")
 
 
-name = st.text_input('Name')
+name = st.text_input('Name', placeholder="Hier Name eingeben...")
 st.write(name)
+
 
 if st.button("Neuer Text1"):
     st.session_state['text1'] = request_no()
