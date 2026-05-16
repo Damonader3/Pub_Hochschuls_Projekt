@@ -54,13 +54,15 @@ def calculate_double(number: float):
 class NoteCreate(BaseModel):
     title: str
     content: str
-    category: str  # Task 1: Added category field
+    category: str  
+    tags: list[str] = []  
 
 class Note(BaseModel):
     id: int
     title: str
     content: str
-    category: str  # Task 1: Added category field
+    category: str  
+    tags: list[str] = []  
     created_at: str
 
 NOTES_FILE = Path("data/notes.json")
@@ -102,7 +104,8 @@ def create_note(note: NoteCreate) -> Note:
         id=note_id_counter,
         title=note.title,
         content=note.content,
-        category=note.category,  
+        category=note.category,
+        tags=note.tags,  
         created_at=datetime.now(timezone.utc).isoformat()
     )
 
@@ -113,10 +116,27 @@ def create_note(note: NoteCreate) -> Note:
 
 
 @app.get("/notes")
-def list_notes() -> list[Note]:
-    """List all notes"""
+def list_notes(
+    category: str = None,
+    search: str = None,
+    tag: str = None
+) -> list[Note]:
+    """List notes with optional filters (category, keyword search, or tag)"""
     notes_db, _ = load_notes()
-    return notes_db
+    filtered = []
+    
+    for note in notes_db:
+        if category and note.category != category:
+            continue
+        if search:
+            search_lower = search.lower()
+            if search_lower not in note.title.lower() and search_lower not in note.content.lower():
+                continue
+        if tag and tag not in note.tags:
+            continue
+        filtered.append(note)
+        
+    return filtered
 
 @app.get("/notes/stats")
 def get_notes_stats():
@@ -161,6 +181,40 @@ def get_note(note_id: int):
         detail=f"Note with ID {note_id} not found"
     )
 
+@app.put("/notes/{note_id}")
+def update_note(note_id: int, note_update: NoteCreate) -> Note:
+    """Update an existing note while maintaining its ID and timestamp"""
+    notes_db, _ = load_notes()
+    for i, note in enumerate(notes_db):
+        if note.id == note_id:
+            updated_note = Note(
+                id=note.id,
+                title=note_update.title,
+                content=note_update.content,
+                category=note_update.category,
+                tags=note_update.tags,
+                created_at=note.created_at
+            )
+            notes_db[i] = updated_note
+            save_notes(notes_db)
+            return updated_note
+    raise HTTPException(status_code=404, detail=f"Note with ID {note_id} not found")
+
+@app.get("/tags")
+def list_tags() -> list[str]:
+    """Get all unique tags across all stored notes"""
+    notes_db, _ = load_notes()
+    all_tags = set()
+    for note in notes_db:
+        for tag in note.tags:
+            all_tags.add(tag)
+    return sorted(list(all_tags))
+
+@app.get("/tags/{tag_name}/notes")
+def get_notes_by_tag(tag_name: str) -> list[Note]:
+    """Get sub-collection of all notes assigned to a specific tag resource"""
+    notes_db, _ = load_notes()
+    return [note for note in notes_db if tag_name in note.tags]
 
 @app.delete("/notes/{note_id}")
 def delete_note(note_id: int):

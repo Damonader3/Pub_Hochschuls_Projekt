@@ -78,25 +78,28 @@ _Explain how you overcame the challenges or what help you needed._
 ### Day 2
 
 #### 1. ✅ What did I accomplish?
-
-
-
-
-
+- Erste Note Taking API
+- Bonus Challange!
+- Erweiterung der API Endpunkte (Homework)
+- Error Handling gemeistert (HTTPException 404 und 500)
+- Daten Grupierungen Erstellt
 
 ---
 
 #### 2. 🚧 What challenges did I face?
-
-
-
-
-
+- Erneute Probleme mit Directory Path Mismatches.
+- 500 Internal Server Errors
+- "Legacy" Daten Konflikte
+- CLI Syntax Error
+- Strenges Schema Rigidit
 
 ---
 
 #### 3. 💡 How did I overcome them?
-
+- Nach Recherche den Command "cd "hello world" benutzt
+- Datenbasis resetet um Error Code 500 zu beheben und "Legacy" Daten Konflikte (notes.json gelöscht)
+- Log Analysen und gezielte suche nach Fehlercodes im Internet
+- UI Neustart um alle Endpunkte neuzustarten
 
 
 
@@ -107,7 +110,7 @@ _Explain how you overcame the challenges or what help you needed._
 ### Day 3
 
 #### 1. ✅ What did I accomplish?
-
+- 
 
 
 
