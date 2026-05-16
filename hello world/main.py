@@ -22,11 +22,30 @@ def read_root():
 def greet_name(name: str):
     return {"message": f"Hello, {name}!"}
 
-@app.get("/calculate/{number}")
+@app.get("/square/{number}")
 def calculate_square(number: float):
-    result = number * 5 + 2
-    return {"number": number, "result": result}
+    """
+    Takes a number and returns its square.
+    """
+    result = number ** 2
+    return {
+        "original_number": number, 
+        "square": result
+    }
 
+@app.get("/student")
+def get_student():
+    return {
+        "name": "Dominic Schifferdecker",  
+        "semester": 1,              
+        "course": "Wirtschaftsinformatik 2.0",
+        "university": "Hoschule Coburg"    
+    }
+
+@app.get("/double/{number}")
+def calculate_double(number: float):
+    result = number * 2
+    return {"original_number": number, "doubled": result}
 
 #################################
 ### Note Taking API Endpoints ###
@@ -54,7 +73,6 @@ def load_notes():
             data = json.load(f)
             notes_db = [Note(**note) for note in data]
 
-            # Set counter to max ID + 1
             if notes_db:
                 note_id_counter = max(note.id for note in notes_db) + 1
 
