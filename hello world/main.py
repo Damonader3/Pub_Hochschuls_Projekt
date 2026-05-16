@@ -47,18 +47,20 @@ def calculate_double(number: float):
     result = number * 2
     return {"original_number": number, "doubled": result}
 
-#################################
-### Note Taking API Endpoints ###
-#################################
+####################################
+# Note Taking API Endpoints
+####################################
 
 class NoteCreate(BaseModel):
     title: str
     content: str
+    category: str  # Task 1: Added category field
 
 class Note(BaseModel):
     id: int
     title: str
     content: str
+    category: str  # Task 1: Added category field
     created_at: str
 
 NOTES_FILE = Path("data/notes.json")
@@ -73,6 +75,7 @@ def load_notes():
             data = json.load(f)
             notes_db = [Note(**note) for note in data]
 
+            # Set counter to max ID + 1
             if notes_db:
                 note_id_counter = max(note.id for note in notes_db) + 1
 
@@ -86,19 +89,20 @@ def save_notes(notes_db):
 
     with open(NOTES_FILE, 'w') as f:
         # Convert Note objects to dicts
-        notes_data = [note.dict() for note in notes_db]
+        notes_data = [note.model_dump() if hasattr(note, "model_dump") else note.dict() for note in notes_db]
         json.dump(notes_data, f, indent=2)
 
-@app.post("/notes", status_code=201)
-def create_note(note: NoteCreate)-> Note:
-    """Create a new note"""
 
+@app.post("/notes", status_code=201)
+def create_note(note: NoteCreate) -> Note:
+    """Create a new note with category"""
     notes_db, note_id_counter = load_notes()
 
     new_note = Note(
         id=note_id_counter,
         title=note.title,
         content=note.content,
+        category=note.category,  
         created_at=datetime.now(timezone.utc).isoformat()
     )
 
@@ -107,8 +111,65 @@ def create_note(note: NoteCreate)-> Note:
 
     return new_note
 
+
 @app.get("/notes")
 def list_notes() -> list[Note]:
     """List all notes"""
     notes_db, _ = load_notes()
     return notes_db
+
+@app.get("/notes/stats")
+def get_notes_stats():
+    """Task 3: Get statistics about notes (Count total and by category)"""
+    notes_db, _ = load_notes()
+    
+    categories = {}
+    for note in notes_db:
+        if note.category in categories:
+            categories[note.category] += 1
+        else:
+            categories[note.category] = 1
+    
+    return {
+        "total_notes": len(notes_db),
+        "by_category": categories
+    }
+
+@app.get("/notes/category/{category}")
+def get_notes_by_category(category: str):
+    """Task 2: Get all notes in a specific category"""
+    filtered_notes = []
+    notes_db, _ = load_notes()
+
+    for note in notes_db:
+        if note.category == category:
+            filtered_notes.append(note)
+    
+    return filtered_notes
+
+@app.get("/notes/{note_id}")
+def get_note(note_id: int):
+    """Get a specific note by ID"""
+    notes_db, _ = load_notes()
+    for note in notes_db:
+        if note.id == note_id:
+            return note
+    
+    # Not found - raise 404 error
+    raise HTTPException(
+        status_code=404,
+        detail=f"Note with ID {note_id} not found"
+    )
+
+
+@app.delete("/notes/{note_id}")
+def delete_note(note_id: int):
+    """Bonus Challenge: Delete a note by ID"""
+    notes_db, _ = load_notes()
+    for i, note in enumerate(notes_db):
+        if note.id == note_id:
+            notes_db.pop(i)
+            save_notes(notes_db)
+            return {"message": "Note deleted"}
+    
+    raise HTTPException(status_code=404, detail="Note not found")
