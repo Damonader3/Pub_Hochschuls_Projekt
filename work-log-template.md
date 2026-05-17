@@ -110,29 +110,24 @@ _Explain how you overcame the challenges or what help you needed._
 ### Day 3
 
 #### 1. ✅ What did I accomplish?
-- 
-
-
-
-
+- Hinzufügen von REST-konformen Put- und DElete-Endpunkten
+- Tag-Arrays integriert: Die Dtenmodelle (Note und NoteCreate) erweotert ,ot tags (tags: list[str] = [])
+- Komplexe Filterlogik entwickelt: Der Endpunkt GET /notes wurde komplett überarbeitet
+- Durch die erstellung von /tags und /tags{tag_names}/notes habe ich ein REST-Designmuster etabliert um Tags als eigenständige, auffindbare Sammlung bereitzustellen
 
 ---
 
 #### 2. 🚧 What challenges did I face?
-
-
-
-
-
+- JSON- Syntax- und Decode-Fehler: Bei API-Aufrufen über die UI traten 422 Unprocessable Content -Fehler auf, durch einen Formatierungsfehler
+- Interner Server-Fehler durch Dateikonflikte: Es kam ernaut zu 500 Internal Server Error durch notes.json
+- Veraltete UTC angabe hat zu Server Crashes geführt
 
 ---
 
 #### 3. 💡 How did I overcome them?
-
-
-
-
-
+- Ein sauberer Server-Restart mit gelöschter notes.json hat den Fehlercode 500 beseitigt
+- JSON Formatierung beachtet (Bei tags [food] eingegeben und nicht ["food"]. " muss mit)
+- Eingebautes Copilot benutzt um den UTC fehler zu beheben
 
 ---
 
@@ -141,8 +136,9 @@ _Explain how you overcame the challenges or what help you needed._
 ### Day 4
 
 #### 1. ✅ What did I accomplish?
-
-
+- Automatisierte Test-Code aufgebaut, welche die API-Funktionalität überprüft
+- Nach anwendung des pytests waren 15 von 15 erfolgreich
+- 
 
 
 
@@ -150,16 +146,15 @@ _Explain how you overcame the challenges or what help you needed._
 ---
 
 #### 2. 🚧 What challenges did I face?
-
-
-
-
-
+- Leere Testdatei (0 KB)
+- Pfad- und Verzeichnis- Verwirrung da der test main.py gefunden hat, aber nicht drauf zugreifen konnte
+- Gleichzeitiges Server- und Testmanagment
 
 ---
 
 #### 3. 💡 How did I overcome them?
-
+- Leere Testdatei wurde behoben durch Speichern. => Speicher ist immer zum Vorteil
+- Erneute Probleme durch den Order name "hello world" weshalb ich den ordner "helloworld" umbenannt habe
 
 
 

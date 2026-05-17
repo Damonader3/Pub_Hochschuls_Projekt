@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "title": "Note",
+    "content": "Content",
+    "category": "Private",
+    "tags": [],
+    "created_at": "2026-05-17T14:32:15.230380+00:00"
+  }
+]
