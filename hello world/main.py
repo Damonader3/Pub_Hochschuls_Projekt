@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from datetime import datetime, timezone
 import json
 from pathlib import Path
@@ -51,12 +51,40 @@ def calculate_double(number: float):
 # Note Taking API Endpoints
 ####################################
 
-class NoteCreate(BaseModel):
-    title: str
-    content: str
-    category: str  
-    tags: list[str] = []  
 
+ALLOWED_CATEGORIES = {"work", "personal", "school", "ideas", "uni", "trash", "break", "coding", "a", "b", "private", "software", "ghost"}
+
+class NoteCreate(BaseModel):
+    model_config = ConfigDict(
+        str_strip_whitespace=True,
+        extra="forbid"
+    )
+
+    title: str = Field(min_length=1, max_length=100, description="Titel der Notiz", examples=["Einkaufsliste"])
+    content: str = Field(min_length=1, description="Inhalt der Notiz")
+    category: str = Field(min_length=1, max_length=30, description="Kategorie der Notiz", examples=["work"])
+    tags: list[str] = Field(default_factory=list, description="Optionale Liste von Tags")
+
+    @field_validator("category")
+    @classmethod
+    def validate_category(cls, value: str) -> str:
+        cleaned = value.lower()
+        if cleaned not in ALLOWED_CATEGORIES:
+            raise ValueError(f"Category must be one of {ALLOWED_CATEGORIES}")
+        return value
+
+    @field_validator("tags")
+    @classmethod
+    def clean_tags(cls, raw_tags: list[str]) -> list[str]:
+        cleaned = []
+        for tag in raw_tags:
+            t = tag.lower()
+            if not t:
+                raise ValueError("Tags cannot be empty strings")
+            if t not in cleaned:
+                cleaned.append(t)
+        return cleaned
+    
 class Note(BaseModel):
     id: int
     title: str
@@ -68,7 +96,6 @@ class Note(BaseModel):
 NOTES_FILE = Path("data/notes.json")
 
 def load_notes():
-    """Load notes from JSON file and return notes list and next ID counter"""
     notes_db = []
     note_id_counter = 1
 
@@ -77,7 +104,6 @@ def load_notes():
             data = json.load(f)
             notes_db = [Note(**note) for note in data]
 
-            # Set counter to max ID + 1
             if notes_db:
                 note_id_counter = max(note.id for note in notes_db) + 1
 
@@ -85,19 +111,15 @@ def load_notes():
 
 
 def save_notes(notes_db):
-    """Save notes to JSON file after each change"""
-    # Ensure data directory exists
     NOTES_FILE.parent.mkdir(parents=True, exist_ok=True)
 
     with open(NOTES_FILE, 'w') as f:
-        # Convert Note objects to dicts
         notes_data = [note.model_dump() if hasattr(note, "model_dump") else note.dict() for note in notes_db]
         json.dump(notes_data, f, indent=2)
 
 
 @app.post("/notes", status_code=201)
 def create_note(note: NoteCreate) -> Note:
-    """Create a new note with category"""
     notes_db, note_id_counter = load_notes()
 
     new_note = Note(
@@ -121,18 +143,17 @@ def list_notes(
     search: str = None,
     tag: str = None
 ) -> list[Note]:
-    """List notes with optional filters (category, keyword search, or tag)"""
     notes_db, _ = load_notes()
     filtered = []
     
     for note in notes_db:
-        if category and note.category != category:
+        if category and note.category.lower() != category.lower():
             continue
         if search:
             search_lower = search.lower()
             if search_lower not in note.title.lower() and search_lower not in note.content.lower():
                 continue
-        if tag and tag not in note.tags:
+        if tag and tag.lower() not in [t.lower() for t in note.tags]:
             continue
         filtered.append(note)
         
@@ -140,15 +161,15 @@ def list_notes(
 
 @app.get("/notes/stats")
 def get_notes_stats():
-    """Task 3: Get statistics about notes (Count total and by category)"""
     notes_db, _ = load_notes()
     
     categories = {}
     for note in notes_db:
-        if note.category in categories:
-            categories[note.category] += 1
+        display_cat = note.category.capitalize()
+        if display_cat in categories:
+            categories[display_cat] += 1
         else:
-            categories[note.category] = 1
+            categories[display_cat] = 1
     
     return {
         "total_notes": len(notes_db),
@@ -157,19 +178,17 @@ def get_notes_stats():
 
 @app.get("/notes/category/{category}")
 def get_notes_by_category(category: str):
-    """Task 2: Get all notes in a specific category"""
     filtered_notes = []
     notes_db, _ = load_notes()
 
     for note in notes_db:
-        if note.category == category:
+        if note.category.lower() == category.lower():
             filtered_notes.append(note)
     
     return filtered_notes
 
 @app.get("/notes/{note_id}")
 def get_note(note_id: int):
-    """Get a specific note by ID"""
     notes_db, _ = load_notes()
     for note in notes_db:
         if note.id == note_id:
@@ -183,7 +202,6 @@ def get_note(note_id: int):
 
 @app.put("/notes/{note_id}")
 def update_note(note_id: int, note_update: NoteCreate) -> Note:
-    """Update an existing note while maintaining its ID and timestamp"""
     notes_db, _ = load_notes()
     for i, note in enumerate(notes_db):
         if note.id == note_id:
@@ -202,7 +220,6 @@ def update_note(note_id: int, note_update: NoteCreate) -> Note:
 
 @app.get("/tags")
 def list_tags() -> list[str]:
-    """Get all unique tags across all stored notes"""
     notes_db, _ = load_notes()
     all_tags = set()
     for note in notes_db:
@@ -212,13 +229,11 @@ def list_tags() -> list[str]:
 
 @app.get("/tags/{tag_name}/notes")
 def get_notes_by_tag(tag_name: str) -> list[Note]:
-    """Get sub-collection of all notes assigned to a specific tag resource"""
     notes_db, _ = load_notes()
     return [note for note in notes_db if tag_name in note.tags]
 
 @app.delete("/notes/{note_id}", status_code=204)  
 def delete_note(note_id: int):
-    """Bonus Challenge: Delete a note by ID"""
     notes_db, _ = load_notes()
     for i, note in enumerate(notes_db):
         if note.id == note_id:

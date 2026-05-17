@@ -155,39 +155,36 @@ _Explain how you overcame the challenges or what help you needed._
 #### 3. 💡 How did I overcome them?
 - Leere Testdatei wurde behoben durch Speichern. => Speicher ist immer zum Vorteil
 - Erneute Probleme durch den Order name "hello world" weshalb ich den ordner "helloworld" umbenannt habe
-
-
-
-
+- test_notes.py konnte auf main.py zugreifen, nachdem beide im selben subfolder eingeordnet waren
 
 ---
 
 ### Day 5
 
 #### 1. ✅ What did I accomplish?
-
-
-
-
-
+- Alle 15 Tests ergebnisse erflogreich mit Passed abgeschlossen (test_notes.py)
+- Validierungs Korrigiert: Den field-validator("category") so umgeschrieben, dass er weiterhin die Gültigkeit prüft 
+- Alle 8 Tests waren erfolgreich (test_validation.py)
+- Alle Endpunkte erfolgreich ausgeweitet
 
 ---
 
 #### 2. 🚧 What challenges did I face?
-
-
-
-
-
+- Nach den ersten Updates waren 9 von 15 tests Failed
+- Nach auswertung der Codes konnte ich es nur auf 3 veringern
+- Der Basiscode hat den API immer zum Crashen gebracht (z. 70)
+- Erstellung der test_validation.py
+- Verfälschte Ergebnisse durch eine Veraltete notes.json datei
+- Fehler da die API im Hintergrund Kategorien als "work" speicherte und die Test-Suite "Work" gesucht hat
 
 ---
 
 #### 3. 💡 How did I overcome them?
-
-
-
-
-
+- Die letzten 3 Filed test habe ich mit hilfe von Gemini gelöst. => Einrückungsfehler in Zeile 70 hat die API Abstürzen lassen und war schuld für 3 Fehlerhafte Tests
+- Code erweitert bzw. auf das Level grbacht damit alle endpunkte mit der Erweiterung zurecht kommen
+- Erstellung der test_validation.py mit hilfe von Gemini, welche meine Fragen beantwortet hat mit Beispielen zur Erklärung 
+- Veraltete notes.json datei gelöscht
+- @field_validator("category") so umgeschrieben, dass er weiterhin die Gültigkeitprüft, am Ende aber den Original-Wert (return value) züruckgibt. Damit waren Groß- und Kleinschreibung keine Problem mehr
 
 ---
 
