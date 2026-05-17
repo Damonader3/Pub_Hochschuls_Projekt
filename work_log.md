@@ -191,29 +191,28 @@ _Explain how you overcame the challenges or what help you needed._
 ### Day 6
 
 #### 1. ✅ What did I accomplish?
-
-
-
-
-
+- 70 pytests-Test für eome FastAPI Notes- API zum Laufen gebracht
+- Fehlende Endpoints implementiert: PATCH /notes/{id}, GET /categories, GET /categories/{cat}/notes
+- /notes/stats um die Felder top_tags und unique_tags_count erweitert
+- Datums-Filter (created_after, created_before) in GET eingebaut
+- Tag-Validierung ergänzt /min. 2 Zeichen, max 10 Tags pro Note
 
 ---
 
 #### 2. 🚧 What challenges did I face?
-
-
-
-
-
+- Viele Tests schlugen fehl (27 von 70)
+- Mehrere Endpoints fehlten komplett in der main.py
+- Die Tag- Validierung war unveolständig
+- Die Kategorier-Allowlist hat valide Test-Kategorien blockiert
+- Der PATCH-Endpoint fehlte komplett
 
 ---
 
 #### 3. 💡 How did I overcome them?
-
-
-
-
-
+- Die Fehler systematisch analysiert und mit der Testdatei verglichen
+- Mit Hilfe von Gemini die fehlenden Endpoints und Validierungen identifiziert und erklärt bekommen
+- Jeden Fix einzeln nachvollzogen, um zu verstehen warum er nötig war
+- Gelernt, dass Tests als Spezifikation gelesen werden können
 
 ---
 
