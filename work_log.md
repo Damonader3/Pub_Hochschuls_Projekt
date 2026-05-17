@@ -221,90 +221,53 @@ _Explain how you overcame the challenges or what help you needed._
 ### Day 7
 
 #### 1. ✅ What did I accomplish?
-
-
-
-
-
+- Erstes Streamlit-Frontend für die Notes-API gebaut
+- Tab 1: Alle Noitzen werden als Dropdown angezeigt, bei Auswahl werden Titel, Inhalt, Kategorie, Tags und Datum angezeigt
+- Tab 2: Formular zum Erstellen neuer Noitzen (Titel, Inhalt, Kategorie, Tags)
+- Frontend erfolgreich mit der FastAPI-Notes-APi verbunden
 
 ---
 
 #### 2. 🚧 What challenges did I face?
-
-
-
-
-
+- Verstehen wie Streamlit-Formulare funktionieren
+- Herausfinden wie man die Session State in Streamlit richtig nutzt
+- Von Grund aus eine neue Streamlit-Frontend Selbständig bauen
 
 ---
 
 #### 3. 💡 How did I overcome them?
-
-
-
-
-
+- Die Streamlit Dokumentation als Referenz genutzt
+- Die im Unterreicht gemacht Streamlit-Frontend API als Beispiel genommen
+- Formfehler von Gemini ausbessern lassen
+- Gelernt das Frontend und Backend komplett getrennt laufen und nur über HTTP Requests miteinander kommunizieren
 
 ---
 
-### Day 8
+### Day 8 Rückblick
 
 #### 1. ✅ What did I accomplish?
-
-
-
-
-
-
----
-
-#### 2. 🚧 What challenges did I face?
-
-
-
-
-
-
----
-
-#### 3. 💡 How did I overcome them?
-
-
-
-
-
-
----
-
-### Day 9
-
-#### 1. ✅ What did I accomplish?
-
-
-
-
-
+- Erste Projekte erfolgreich geschafft
+- FastAPIs erstellt
+- Note Taking APIs erstellt
+- Erste schritte in der Programmierung gewagt
 
 ---
 
 #### 2. 🚧 What challenges did I face?
-
-
-
-
-
+- Am anfang habe ich die Codes angeschaut und dachte mir das schaffe ich nicht!
+- Es war sehr ungewohnt und schwer die ersten Schritte zu machen
+- Den Überblick zu behalten
+- APIs zum ersten mal zu erstellen
 
 ---
 
 #### 3. 💡 How did I overcome them?
-
-
-
-
-
+- Durch konkrete Anforderungen und Ziele immer einen Faden behalten
+- Mit einem Plan im Internet mit den Richtigen Fragen zur richtigen Lösung zu kommen
+- Immer dran bleiben => Egal wie schwer! 
+- Strukturiert bleiben und immer ein Problem nach dem anderen Lösen!
 
 ---
-
 
 # 🎉 Congratulations! You did it! 🎓✨
 
