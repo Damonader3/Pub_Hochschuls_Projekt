@@ -216,7 +216,7 @@ def get_notes_by_tag(tag_name: str) -> list[Note]:
     notes_db, _ = load_notes()
     return [note for note in notes_db if tag_name in note.tags]
 
-@app.delete("/notes/{note_id}")
+@app.delete("/notes/{note_id}", status_code=204)  
 def delete_note(note_id: int):
     """Bonus Challenge: Delete a note by ID"""
     notes_db, _ = load_notes()
@@ -224,6 +224,6 @@ def delete_note(note_id: int):
         if note.id == note_id:
             notes_db.pop(i)
             save_notes(notes_db)
-            return {"message": "Note deleted"}
+            return  
     
     raise HTTPException(status_code=404, detail="Note not found")
